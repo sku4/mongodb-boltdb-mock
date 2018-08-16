@@ -3,6 +3,8 @@ Package shows how to mock MongoDB or BoltDB using a single Go interface.
 It's not cover all db methods from the [globalsign/mgo](https://github.com/globalsign/mgo) driver's package.  
 Feel free to extend the package according to your needs.
 
+Package inspired by this article - [Mocking Mongo in Go](http://thylong.com/golang/2016/mocking-mongo-in-golang/)
+
 **Table of contents**
 * [How to install](#how-to-install)
 * [Package contents](#package-contents)
