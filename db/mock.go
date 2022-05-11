@@ -35,8 +35,9 @@ func (mk *Mock) CopyWithSettings(settings ...interface{}) (Handler, error) {
 }
 
 //Close присваивает полю Closed значение true
-func (mk *Mock) Close() {
+func (mk *Mock) Close() (err error) {
 	mk.Closed = true
+	return
 }
 
 //ExecOn - возвращает db.Querier со структурой &MockCollection{Msg: "ExecOn called"}

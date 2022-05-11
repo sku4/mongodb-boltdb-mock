@@ -91,8 +91,8 @@ func (b *Bolt) ExecOn(resources ...interface{}) Querier {
 		b.bucket = []byte(defaultBucketName)
 		return b
 	}
-	bucketName, ok := resources[0].(string)
-	if !ok {
+	bucketName := fmt.Sprintf("%s", resources[0])
+	if bucketName == "" {
 		b.bucket = []byte(defaultBucketName)
 		return b
 	}
