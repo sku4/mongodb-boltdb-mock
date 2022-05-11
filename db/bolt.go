@@ -15,10 +15,11 @@ import (
 const defaultBucketName = "default"
 
 type Bolt struct {
-	db     *bolt.DB
-	dir    string //to be deleted on Close()
-	bucket []byte
-	key    []byte
+	db        *bolt.DB
+	dir       string //to be deleted on Close()
+	bucket    []byte
+	key       []byte
+	isTempDir bool
 }
 
 func (b *Bolt) Connect(resources ...interface{}) (err error) {
@@ -35,6 +36,7 @@ func (b *Bolt) Connect(resources ...interface{}) (err error) {
 	}
 	if b.dir == "" {
 		b.dir, err = ioutil.TempDir("", boltDBFile)
+		b.isTempDir = true
 	}
 	if err != nil {
 		return err
@@ -78,7 +80,9 @@ func (b *Bolt) Close() (err error) {
 	if err = b.db.Close(); err != nil {
 		return
 	}
-	err = os.RemoveAll(b.dir)
+	if b.isTempDir {
+		err = os.RemoveAll(b.dir)
+	}
 	return
 }
 
