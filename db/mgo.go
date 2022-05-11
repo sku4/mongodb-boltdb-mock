@@ -56,8 +56,9 @@ func (m *Mongo) CopyWithSettings(settings ...interface{}) (Handler, error) {
 }
 
 //Close shuts down the link to db
-func (m *Mongo) Close() {
+func (m *Mongo) Close() (err error) {
 	m.Session.Close()
+	return
 }
 
 /*

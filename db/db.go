@@ -17,7 +17,7 @@ type Handler interface {
 	Connect(resources ...interface{}) error
 	Copy() Handler                                             //Метод возвращает интерфейсный тип с копией сессии, полученной от корневой
 	CopyWithSettings(settings ...interface{}) (Handler, error) //Метод возвращает интерфейсный тип с копией сессии в нужном режиме
-	Close()
+	Close() error
 
 	ExecOn(resources ...interface{}) Querier
 }

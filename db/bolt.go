@@ -74,9 +74,12 @@ func (b *Bolt) Connect(resources ...interface{}) (err error) {
 
 func (b *Bolt) Copy() Handler                                             { return b }
 func (b *Bolt) CopyWithSettings(settings ...interface{}) (Handler, error) { return b, nil }
-func (b *Bolt) Close() {
-	b.db.Close()
-	os.RemoveAll(b.dir)
+func (b *Bolt) Close() (err error) {
+	if err = b.db.Close(); err != nil {
+		return
+	}
+	err = os.RemoveAll(b.dir)
+	return
 }
 
 func (b *Bolt) ExecOn(resources ...interface{}) Querier {
