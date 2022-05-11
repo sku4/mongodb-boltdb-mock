@@ -23,30 +23,34 @@ type Bolt struct {
 
 func (b *Bolt) Connect(resources ...interface{}) (err error) {
 	//reading db filename
-	boltDBName, ok := resources[0].(string)
+	boltDBFile, ok := resources[0].(string)
 	if !ok {
-		return errors.New("Unexpected resources set, want `boltDBName string`")
+		return errors.New("Unexpected resources set, want `boltDBFile string`")
 	}
 
-	//making directory with the prefix = boltDBName
-	b.dir, err = ioutil.TempDir("", boltDBName)
+	//making directory with the prefix = boltDBFile
+	b.dir, ok = resources[1].(string)
+	if !ok {
+		return errors.New("Unexpected resources set, want `boltDBPath string`")
+	}
+	if b.dir == "" {
+		b.dir, err = ioutil.TempDir("", boltDBFile)
+	}
 	if err != nil {
 		return err
 	}
 
 	//opening the file
-	b.db, err = bolt.Open(fmt.Sprintf("%s/%s", b.dir, boltDBName), 0644, nil)
+	b.db, err = bolt.Open(fmt.Sprintf("%s/%s", b.dir, boltDBFile), 0644, nil)
 	if err != nil {
 		return err
 	}
 
 	//setting up the buckets (if any received @ resources)
 	err = b.db.Update(func(tx *bolt.Tx) error {
-		for i := 1; i < len(resources); i++ {
-			bucketName, ok := resources[i].(string)
-			if !ok {
-				continue
-			}
+		bucketNames := resources[2].([]string)
+		for i := 0; i < len(bucketNames); i++ {
+			bucketName := bucketNames[i]
 			_, err := tx.CreateBucketIfNotExists([]byte(bucketName))
 			if err != nil {
 				return err
